@@ -1,2 +1,2 @@
 # Similarity
-A muti-GPU deep learning model template for myself
+A multi-GPU deep learning model template for myself
