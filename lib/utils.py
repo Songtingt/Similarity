@@ -148,21 +148,3 @@ def create_label_same_size(location, search_size):  # location torch.size(4,2)
 
     return labels
 
-
-def compute_score(sar, opt):
-    'batch1 小 batch2大'
-    b, c, h, w = sar.shape
-    search_size = opt.shape[2] - sar.shape[2] + 1  # 800-512+1=289
-    similarity_matrix = torch.zeros((b, search_size, search_size))  # b,s,s
-    sar_sum = torch.sum(torch.mul(sar, sar), dim=(1, 2, 3))
-
-    for i in range(search_size):
-        for j in range(search_size):
-            opt_patch = opt[:, :, i:i + h, j:j + w]
-            opt_sum = torch.sum(torch.mul(opt_patch, opt_patch), dim=(1, 2, 3))  # b
-
-            total_sum = torch.sqrt(sar_sum * opt_sum)  # b
-            similarity_matrix[:, i, j] = torch.einsum('bdhw,bdhw->b', [sar, opt_patch]) / total_sum
-
-    return similarity_matrix
-
